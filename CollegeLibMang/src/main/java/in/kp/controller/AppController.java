@@ -3,6 +3,7 @@ package in.kp.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +36,25 @@ public class AppController extends HttpServlet {
     	String spwd=request.getParameter("spwd");
     	String msg=studSrv.studLogin(sid,spwd);
     	System.out.println(msg);
+    	
+    	if(msg.equals("Login successful")) {
+    		RequestDispatcher reqDp=request.getRequestDispatcher("../studentHomePage.html");
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    	else {
+    		RequestDispatcher reqDp=request.getRequestDispatcher("../error.jsp");
+    		request.setAttribute("error",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				
+				e.printStackTrace();
+			}
+    	}
     }
     public void studRegister(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("***Student Registration***");
@@ -47,6 +67,26 @@ public class AppController extends HttpServlet {
     	IStudent studSrv=StudSrvFactory.getStudSrv();
     	String msg=studSrv.studReg(stud);
     	System.out.println(msg);
+    	
+    	if(msg.equals("Student added successfully!")) {
+    		RequestDispatcher reqDp=request.getRequestDispatcher("../studentregister.jsp");
+    		request.setAttribute("msg",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    	else {
+    		RequestDispatcher reqDp=request.getRequestDispatcher("../error.jsp");
+    		request.setAttribute("error",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				
+				e.printStackTrace();
+			}
+    	}
     }
     public void studMyBooks(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("***Student My Books***");
@@ -54,6 +94,15 @@ public class AppController extends HttpServlet {
     	IStudent studSrv=StudSrvFactory.getStudSrv();
     	List<Book> books=studSrv.studMyBooks(sid);
     	books.toString();
+    	
+    	request.setAttribute("books",books);
+    	request.setAttribute("msg","My Books");
+    	try {
+			request.getRequestDispatcher("../objectReader.jsp").forward(request, response);
+		} catch (ServletException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     public void studAvilableBooks(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("***Student Avilable Books***");
@@ -61,7 +110,15 @@ public class AppController extends HttpServlet {
     	IStudent studSrv=StudSrvFactory.getStudSrv();
     	List<Book> books=studSrv.studAvilBooks();
     	
-    	books.toString();
+    	System.out.println(books.toString());
+    	request.setAttribute("books",books);
+    	request.setAttribute("msg","Avilable Books");
+    	try {
+			request.getRequestDispatcher("../objectReader.jsp").forward(request, response);
+		} catch (ServletException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     public void studSubmitBook(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("***Student Submit Book***");
@@ -71,6 +128,13 @@ public class AppController extends HttpServlet {
     	IStudent studSrv=StudSrvFactory.getStudSrv();
     	String msg=studSrv.studSubmitBook(sid,bid);
     	System.out.println(msg);
+    	request.setAttribute("msg",msg);
+    	try {
+			request.getRequestDispatcher("../studsubmitbook.jsp").forward(request, response);
+		} catch (ServletException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     public void studMyFines(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("***Student My fines***");
@@ -79,6 +143,14 @@ public class AppController extends HttpServlet {
     	List<StudBookTracker> studFines=studSrv.studMyFines(sid);
     	
     	studFines.toString();
+    	request.setAttribute("studbooktrace",studFines);
+    	request.setAttribute("msg","Fine details");
+    	try {
+			request.getRequestDispatcher("../studmyfinesres.jsp").forward(request, response);
+		} catch (ServletException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     //management related methods
@@ -91,6 +163,24 @@ public class AppController extends HttpServlet {
     	IManagement mangSrv=MangSrvFactory.getMangSrv();
     	String msg=mangSrv.mangLogin(mid, mpwd);
     	System.out.println(msg);
+    	if(msg.equals("Login successful")) {
+    		RequestDispatcher reqDp=request.getRequestDispatcher("../mngindex.html");
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    	else {
+    		RequestDispatcher reqDp=request.getRequestDispatcher("../error.jsp");
+    		request.setAttribute("error",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				
+				e.printStackTrace();
+			}
+    	}
     }
     public void mangRegister(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("***Management Register***");
@@ -104,6 +194,26 @@ public class AppController extends HttpServlet {
     	IManagement mangSrv=MangSrvFactory.getMangSrv();
     	String msg=mangSrv.mangReg(mang);
     	System.out.println(msg);
+    	
+    	if(msg.equals("Management added successfully!")) {
+    		RequestDispatcher reqDp=request.getRequestDispatcher("../managementregister.jsp");
+    		request.setAttribute("msg",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    	else {
+    		RequestDispatcher reqDp=request.getRequestDispatcher("../error.jsp");
+    		request.setAttribute("error",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				
+				e.printStackTrace();
+			}
+    	}
     }
     public void mangAddBookLib(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("***Management Adding Book to Library");
@@ -116,6 +226,14 @@ public class AppController extends HttpServlet {
     	IManagement mang=MangSrvFactory.getMangSrv();
     	String msg=mang.mangAddBookLib(book);
     	System.out.println(msg);
+    	
+    	RequestDispatcher reqDp=request.getRequestDispatcher("../mangaddlib.jsp");
+    	request.setAttribute("msg",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				e.printStackTrace();
+			}
     }
     public void mangUpdateBookLib(HttpServletRequest request, HttpServletResponse response) {}
     public void mangRemoveBookLib(HttpServletRequest request, HttpServletResponse response) {
@@ -127,6 +245,13 @@ public class AppController extends HttpServlet {
     	String msg=mangSrv.mangRemoveBookLib(book);
     	
     	System.out.println(msg);
+    	RequestDispatcher reqDp=request.getRequestDispatcher("../mangremovelib.jsp");
+    	request.setAttribute("msg",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				e.printStackTrace();
+			}
     	
     }
     public void mangSearchBookLib(HttpServletRequest request, HttpServletResponse response) {
@@ -139,6 +264,14 @@ public class AppController extends HttpServlet {
     	
     	books.toString();
     	
+    	RequestDispatcher reqDp=request.getRequestDispatcher("../mangsearchlibres.jsp");
+    	request.setAttribute("books",books);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				e.printStackTrace();
+			}
+    	
     }
     public void mangIssueBookStud(HttpServletRequest request, HttpServletResponse response) {
     	System.out.println("***Management Issue Book");
@@ -149,6 +282,14 @@ public class AppController extends HttpServlet {
     	String msg=mangSrv.mangIssueBookStud(sid, bid);
     	
     	System.out.println(msg);
+    	RequestDispatcher reqDp=request.getRequestDispatcher("../mangissuestud.jsp");
+    	request.setAttribute("msg",msg);
+    	try {
+				reqDp.forward(request, response);
+		} catch (ServletException | IOException e) {
+				e.printStackTrace();
+			}
+    	
     }
    
     

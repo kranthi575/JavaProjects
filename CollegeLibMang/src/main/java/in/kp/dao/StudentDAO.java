@@ -11,6 +11,7 @@ import in.kp.model.Book;
 import in.kp.model.StudBookTracker;
 import in.kp.model.Student;
 import in.kp.util.JDBCUtil;
+import in.kp.util.UtilLib;
 
 public class StudentDAO implements IStudent {
 
@@ -101,7 +102,7 @@ public class StudentDAO implements IStudent {
 		PreparedStatement pstmt=null;
 		ResultSet resultSet=null;
 		List<String> bidList=new ArrayList();
-		Book book=new Book();
+		Book book=null;
 		try {
 			conn=JDBCUtil.getConnection();
 			//String sqlQuery1="select bid from college_lib_mang.studentbooktracker where sid=?";
@@ -113,12 +114,13 @@ public class StudentDAO implements IStudent {
 					
 						resultSet=pstmt.executeQuery();
 						while(resultSet.next()) {
-							System.out.println(resultSet);
+							book=new Book();
+							//System.out.println(resultSet);
 							book.setBid(resultSet.getString("bid"));
 							book.setBauthor(resultSet.getString("bauthor"));
 							book.setBtitle(resultSet.getString("btitle"));
 							book.setBcategory(resultSet.getString("bcategory"));
-							System.out.println(book.toString());
+							//System.out.println(book.toString());
 							books.add(book);
 						}
 					}
@@ -137,6 +139,8 @@ public class StudentDAO implements IStudent {
 		Connection conn=null;
 		PreparedStatement pstmt=null;
 		int count;
+		
+		if(UtilLib.checkAlreadySubmitted(sid,bid)) {return "Book already submitted";};
 		
 		try {
 			conn=JDBCUtil.getConnection();
@@ -169,19 +173,20 @@ public class StudentDAO implements IStudent {
 		PreparedStatement pstmt=null;
 		ResultSet resultSet=null;
 		List<String> bidList=new ArrayList();
-		StudBookTracker book=new StudBookTracker();
+		StudBookTracker book=null;
 		try {
 			conn=JDBCUtil.getConnection();
 			//String sqlQuery1="select bid from college_lib_mang.studentbooktracker where sid=?";
-			String sqlQuery="select * from college_lib_mang.studentbooktracker";
+			String sqlQuery="select * from college_lib_mang.studentbooktracker where sid=?";
 			if(conn!=null) {
 				pstmt=conn.prepareStatement(sqlQuery);
-				
+				pstmt.setString(1,sid);
 				if(pstmt!=null) {
 					
 						resultSet=pstmt.executeQuery();
 						while(resultSet.next()) {
-							System.out.println(resultSet);
+							//System.out.println(resultSet);
+							book=new StudBookTracker();
 							book.setSid(resultSet.getString("sid"));
 							book.setBid(resultSet.getString("bid"));
 							book.setBorrowdate(resultSet.getDate("borrowdate"));
@@ -207,7 +212,7 @@ public class StudentDAO implements IStudent {
 		PreparedStatement pstmt=null;
 		ResultSet resultSet=null;
 		List<String> bidList=new ArrayList();
-		Book book=new Book();
+		Book book=null;
 		try {
 			conn=JDBCUtil.getConnection();
 			String sqlQuery1="select bid from college_lib_mang.studentbooktracker where sid=?";
@@ -224,16 +229,17 @@ public class StudentDAO implements IStudent {
 					pstmt=null;
 					resultSet=null;
 				}
-				System.out.println(bidList);
+				//System.out.println(bidList);
 				pstmt=conn.prepareStatement(sqlQuery2);
 				if(pstmt!=null) {
-					System.out.println("pstmt2 ::");
+					//System.out.println("pstmt2 ::");
 					for(String bid:bidList) {
 						pstmt.setString(1,bid);
-						System.out.println(bid);
+						//System.out.println(bid);
 						resultSet=pstmt.executeQuery();
 						while(resultSet.next()) {
-							System.out.println(resultSet);
+							//System.out.println(resultSet);
+							book=new Book();
 							book.setBid(resultSet.getString("bid"));
 							book.setBauthor(resultSet.getString("bauthor"));
 							book.setBtitle(resultSet.getString("btitle"));

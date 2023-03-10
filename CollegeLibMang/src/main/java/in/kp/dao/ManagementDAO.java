@@ -10,6 +10,7 @@ import java.util.List;
 import in.kp.model.Book;
 import in.kp.model.Management;
 import in.kp.util.JDBCUtil;
+import in.kp.util.UtilLib;
 
 public class ManagementDAO implements IManagement {
 
@@ -97,7 +98,9 @@ public class ManagementDAO implements IManagement {
 		Connection conn=null;
 		PreparedStatement pstmt=null;
 		Boolean flag=true;
-		
+		if(!UtilLib.checkStudID(sid)) {return "given sid is not presented in db";}
+		if(!UtilLib.checkBookID(bid)) {return "given bid is not presented in db";}
+		if(UtilLib.checkStudBookCount(sid)) {return "book count exceeded three:: can't issue book";}
 		try {
 			conn=JDBCUtil.getConnection();
 			String sqlQuery="insert into college_lib_mang.studentbooktracker(sid,bid,borrowdate,submitdate,fine) values(?,?,?,?,?)";
